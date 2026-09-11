@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#050505">
+<link rel="preload" as="image" href="./banner.webp" fetchpriority="high">
 <title>EAMSONE — Wildlife Photographer</title>
 <style>
 :root{--bg:#050505;--fg:#f3f3f1;--muted:#929292;--line:#252525}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif;font-weight:300}
 button,a{font:inherit}.hero{height:100svh;min-height:620px;position:relative;display:flex;align-items:flex-end;overflow:hidden;background:#050505}
-.hero-bg{position:absolute;inset:-8%;background:center/cover no-repeat;filter:grayscale(1);transform:translate3d(0,0,0) scale(1.06);will-change:transform}
+.hero-bg{position:absolute;inset:-8%;background:url("./banner.webp") center/cover no-repeat;filter:grayscale(1);transform:translate3d(0,0,0) scale(1.06);will-change:transform}
 .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.78) 100%)}
 .hero-content{position:relative;z-index:1;padding:clamp(28px,6vw,90px);width:100%}
 .eyebrow,.label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#bdbdbd}
@@ -26,14 +27,18 @@ section{max-width:1500px;margin:auto;padding:110px clamp(24px,6vw,90px)}
 .filter:hover,.filter.active{background:#eee;color:#111;border-color:#eee}
 .gallery{columns:3 260px;column-gap:16px}
 .card{break-inside:avoid;margin:0 0 16px;cursor:pointer;opacity:0;transform:translateY(12px);animation:reveal .6s ease forwards}
-.card img{width:100%;height:auto;display:block}
+.card img{width:100%;height:auto;display:block;transition:transform .5s ease,opacity .5s ease}
+.card:hover img{
+  transform:scale(1.012);
+  opacity:1;
+}
 .caption{padding:11px 1px 2px;font-size:12px}.caption span{display:block;color:#707070;font-size:10px;margin-top:5px}
 .more-wrap{text-align:center;padding:35px 0 0}.more{background:none;border:1px solid #333;color:#ddd;padding:12px 23px;border-radius:30px;font-size:10px;letter-spacing:.18em;cursor:pointer;transition:.25s}.more:hover{background:#eee;color:#111}
 .wallpapers{border-top:1px solid var(--line)}
 .wallpapers h2{font-size:clamp(38px,6vw,80px);font-weight:300;letter-spacing:-.05em;margin:15px 0}
 .wallpapers p{color:#888;max-width:600px;line-height:1.7}
 .wall-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:45px}
-.wall{position:relative;background:#111;overflow:hidden;cursor:pointer}.wall img{width:100%;display:block;aspect-ratio:9/16;object-fit:cover}
+.wall{position:relative;background:#111;overflow:hidden;cursor:pointer}.wall img{width:100%;display:block;aspect-ratio:9/16;object-fit:cover;transition:.5s}.wall:hover img{transform:scale(1.015)}
 .download{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,.2);padding:11px;border-radius:4px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;cursor:pointer}
 .contact{border-top:1px solid var(--line);text-align:center}.contact h2{font-size:clamp(55px,9vw,120px);font-weight:300;letter-spacing:-.06em;margin:18px 0}.contact p{color:#999;line-height:1.8}.contact a{color:#eee;text-decoration:none;border-bottom:1px solid #555;padding-bottom:3px}
 footer{border-top:1px solid var(--line);padding:28px clamp(24px,6vw,90px);display:flex;justify-content:space-between;color:#666;font-size:10px;letter-spacing:.08em}
@@ -102,7 +107,6 @@ async function init(){
   try{
     const r=await fetch(API_URL); const data=await r.json();
     gallery=data.gallery||[]; wallpapers=data.wallpapers||[];
-    document.getElementById("heroBg").style.backgroundImage='url("./banner.webp")';
     renderFilters(); renderGallery("all"); renderWalls(); renderContact(data.contact||"");
   }catch(e){
     document.getElementById("gallery").innerHTML='<p class="status">No se pudieron cargar las fotografías.</p>';
@@ -118,7 +122,7 @@ function renderFilters(){
 function renderGallery(cat){
   const list=cat==="all"?gallery:gallery.filter(x=>x.categoria===cat); currentList=list;
   const show=list.slice(0,visible), g=document.getElementById("gallery"); g.innerHTML="";
-  show.forEach((x,i)=>{const c=document.createElement("article");c.className="card";c.style.animationDelay=(i*.035)+"s";c.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy" decoding="async"><div class="caption">${esc(x.especie)}<span>${esc([x.cientifico,x.lugar].filter(Boolean).join(" · "))}</span></div>`;c.onclick=()=>openLightbox(i,list,false);g.appendChild(c)});
+  show.forEach((x,i)=>{const c=document.createElement("article");c.className="card";c.style.animationDelay=(i*.035)+"s";c.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy"><div class="caption">${esc(x.especie)}<span>${esc([x.cientifico,x.lugar].filter(Boolean).join(" · "))}</span></div>`;c.onclick=()=>openLightbox(i,list,false);g.appendChild(c)});
   document.getElementById("moreBtn").style.display=list.length>visible?"inline-block":"none";
 }
 document.getElementById("moreBtn").onclick=()=>{visible+=9;const active=document.querySelector(".filter.active");renderGallery(active?active.dataset.cat:"all")};
