@@ -103,7 +103,7 @@ async function init(){
   try{
     const r=await fetch(API_URL); const data=await r.json();
     gallery=data.gallery||[]; wallpapers=data.wallpapers||[];
-    if(data.banner) document.getElementById("heroBg").style.backgroundImage=`url("${data.banner}")`;
+    document.getElementById("heroBg").style.backgroundImage='url("banner.webp")';
     renderFilters(); renderGallery("all"); renderWalls(); renderContact(data.contact||"");
   }catch(e){
     document.getElementById("gallery").innerHTML='<p class="status">No se pudieron cargar las fotografías.</p>';
@@ -119,27 +119,16 @@ function renderFilters(){
 function renderGallery(cat){
   const list=cat==="all"?gallery:gallery.filter(x=>x.categoria===cat); currentList=list;
   const show=list.slice(0,visible), g=document.getElementById("gallery"); g.innerHTML="";
-  show.forEach((x,i)=>{const c=document.createElement("article");c.className="card";c.style.animationDelay=(i*.035)+"s";c.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy" decoding="async"><div class="caption">${esc(x.especie)}<span>${esc([x.cientifico,x.lugar].filter(Boolean).join(" · "))}</span></div>`;c.onclick=()=>openLightbox(i,list,false);g.appendChild(c)});
+  show.forEach((x,i)=>{const c=document.createElement("article");c.className="card";c.style.animationDelay=(i*.035)+"s";c.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy"><div class="caption">${esc(x.especie)}<span>${esc([x.cientifico,x.lugar].filter(Boolean).join(" · "))}</span></div>`;c.onclick=()=>openLightbox(i,list,false);g.appendChild(c)});
   document.getElementById("moreBtn").style.display=list.length>visible?"inline-block":"none";
 }
 document.getElementById("moreBtn").onclick=()=>{visible+=9;const active=document.querySelector(".filter.active");renderGallery(active?active.dataset.cat:"all")};
 function renderWalls(){
-  const g=document.getElementById("wallGrid");
-  g.innerHTML="";
+  const g=document.getElementById("wallGrid");g.innerHTML="";
   const show=wallpapers.slice(0,wallVisible);
-  show.forEach((x,i)=>{
-    const d=document.createElement("div");d.className="wall";
-    d.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy" decoding="async"><button class="download">↓ Descargar</button>`;
-    d.querySelector(".download").onclick=e=>{e.stopPropagation();downloadFile(x.imagen,x.nombre||"eamsone-wallpaper.jpg")};
-    d.onclick=()=>openLightbox(i,wallpapers,true);g.appendChild(d);
-  });
-  const old=document.getElementById("wallMoreBtn"); if(old) old.remove();
-  if(wallpapers.length>wallVisible){
-    const wrap=document.createElement("div");wrap.className="more-wrap";wrap.id="wallMoreBtn";
-    wrap.innerHTML='<button class="more">VER MÁS</button>';
-    wrap.querySelector("button").onclick=()=>{wallVisible+=8;renderWalls()};
-    g.parentNode.appendChild(wrap);
-  }
+  show.forEach((x,i)=>{const d=document.createElement("div");d.className="wall";d.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy" decoding="async"><button class="download">↓ Descargar</button>`;d.querySelector(".download").onclick=e=>{e.stopPropagation();downloadFile(x.imagen,x.nombre||"eamsone-wallpaper.jpg")};d.onclick=()=>openLightbox(i,wallpapers,true);g.appendChild(d)});
+  const old=document.getElementById("wallMoreBtn");if(old) old.remove();
+  if(wallpapers.length>wallVisible){const wrap=document.createElement("div");wrap.className="more-wrap";wrap.id="wallMoreBtn";wrap.innerHTML='<button class="more">VER MÁS</button>';wrap.querySelector("button").onclick=()=>{wallVisible+=8;renderWalls()};g.parentNode.appendChild(wrap);}
 }
 function renderContact(txt){
   const box=document.getElementById("contactData");
