@@ -42,7 +42,7 @@ footer{border-top:1px solid var(--line);padding:28px clamp(24px,6vw,90px);displa
 .status{color:#666;font-size:12px}
 @keyframes reveal{to{opacity:1;transform:none}}
 @media(max-width:800px){.intro{grid-template-columns:1fr;gap:25px}.wall-grid{grid-template-columns:repeat(2,1fr)}.lightbox{padding:45px 35px}.prev{left:2px}.next{right:2px}}
-@media(max-width:520px){section{padding:75px 20px}.gallery{columns:2 140px;column-gap:9px}.card{margin-bottom:9px}.hero-content{padding:28px 20px}.scroll{right:18px}.wall-grid{gap:9px}footer{display:block;line-height:2}}
+@media(max-width:520px){.hero{height:72svh;min-height:480px;max-height:680px}.hero-bg{inset:-4%;background-position:center center;transform:translate3d(0,0,0) scale(1.04)}section{padding:75px 20px}.gallery{columns:2 140px;column-gap:9px}.card{margin-bottom:9px}.hero-content{padding:28px 20px}.scroll{right:18px}.wall-grid{gap:9px}footer{display:block;line-height:2}}
 </style>
 </head>
 <body>
@@ -97,7 +97,7 @@ footer{border-top:1px solid var(--line);padding:28px clamp(24px,6vw,90px);displa
 
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbxJeMUulmI7OFaJ6iRXSLBFEntlkeTQDbyu-DRfz0_RtO5CbzwIKcj_D549_DjIXTxe/exec";
-let gallery=[], wallpapers=[], visible=9, currentIndex=0, currentList=[];
+let gallery=[], wallpapers=[], visible=9, wallVisible=8, currentIndex=0, currentList=[];
 
 async function init(){
   try{
@@ -119,13 +119,27 @@ function renderFilters(){
 function renderGallery(cat){
   const list=cat==="all"?gallery:gallery.filter(x=>x.categoria===cat); currentList=list;
   const show=list.slice(0,visible), g=document.getElementById("gallery"); g.innerHTML="";
-  show.forEach((x,i)=>{const c=document.createElement("article");c.className="card";c.style.animationDelay=(i*.035)+"s";c.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy"><div class="caption">${esc(x.especie)}<span>${esc([x.cientifico,x.lugar].filter(Boolean).join(" · "))}</span></div>`;c.onclick=()=>openLightbox(i,list,false);g.appendChild(c)});
+  show.forEach((x,i)=>{const c=document.createElement("article");c.className="card";c.style.animationDelay=(i*.035)+"s";c.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy" decoding="async"><div class="caption">${esc(x.especie)}<span>${esc([x.cientifico,x.lugar].filter(Boolean).join(" · "))}</span></div>`;c.onclick=()=>openLightbox(i,list,false);g.appendChild(c)});
   document.getElementById("moreBtn").style.display=list.length>visible?"inline-block":"none";
 }
 document.getElementById("moreBtn").onclick=()=>{visible+=9;const active=document.querySelector(".filter.active");renderGallery(active?active.dataset.cat:"all")};
 function renderWalls(){
-  const g=document.getElementById("wallGrid");g.innerHTML="";
-  wallpapers.forEach((x,i)=>{const d=document.createElement("div");d.className="wall";d.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy"><button class="download">↓ Descargar</button>`;d.querySelector(".download").onclick=e=>{e.stopPropagation();downloadFile(x.imagen,x.nombre||"eamsone-wallpaper.jpg")};d.onclick=()=>openLightbox(i,wallpapers,true);g.appendChild(d)});
+  const g=document.getElementById("wallGrid");
+  g.innerHTML="";
+  const show=wallpapers.slice(0,wallVisible);
+  show.forEach((x,i)=>{
+    const d=document.createElement("div");d.className="wall";
+    d.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy" decoding="async"><button class="download">↓ Descargar</button>`;
+    d.querySelector(".download").onclick=e=>{e.stopPropagation();downloadFile(x.imagen,x.nombre||"eamsone-wallpaper.jpg")};
+    d.onclick=()=>openLightbox(i,wallpapers,true);g.appendChild(d);
+  });
+  const old=document.getElementById("wallMoreBtn"); if(old) old.remove();
+  if(wallpapers.length>wallVisible){
+    const wrap=document.createElement("div");wrap.className="more-wrap";wrap.id="wallMoreBtn";
+    wrap.innerHTML='<button class="more">VER MÁS</button>';
+    wrap.querySelector("button").onclick=()=>{wallVisible+=8;renderWalls()};
+    g.parentNode.appendChild(wrap);
+  }
 }
 function renderContact(txt){
   const box=document.getElementById("contactData");
