@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<title>EAMSONE — Wildlife Photography</title>
+<style>
+:root{--bg:#050505;--fg:#f3f3f1;--muted:#929292;--line:#252525}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif;font-weight:300}
+button,a{font:inherit}.hero{height:100svh;min-height:620px;position:relative;display:flex;align-items:flex-end;overflow:hidden;background:#050505}
+.hero-bg{position:absolute;inset:-8%;background:center/cover no-repeat;filter:grayscale(1);transform:translate3d(0,0,0) scale(1.06);will-change:transform}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.78) 100%)}
+.hero-content{position:relative;z-index:1;padding:clamp(28px,6vw,90px);width:100%}
+.eyebrow,.label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#bdbdbd}
+h1{font-size:clamp(62px,13vw,170px);line-height:.78;letter-spacing:-.065em;font-weight:400;margin:15px 0}
+.hero-title{font-size:clamp(12px,1.5vw,18px);letter-spacing:.28em}
+.by{margin-top:26px;color:#c7c7c7;font-size:13px;letter-spacing:.08em}
+.scroll{position:absolute;right:clamp(28px,6vw,90px);bottom:35px;z-index:2;color:#aaa;font-size:10px;letter-spacing:.2em;writing-mode:vertical-rl}
+section{max-width:1500px;margin:auto;padding:110px clamp(24px,6vw,90px)}
+.intro{display:grid;grid-template-columns:1fr 2fr;gap:8vw}
+.intro h2{font-size:clamp(35px,5vw,70px);font-weight:300;line-height:1.02;margin:0;letter-spacing:-.04em}
+.intro p{max-width:720px;color:#aaa;line-height:1.8;font-size:17px;margin-top:28px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0 48px}
+.filter{background:none;border:1px solid var(--line);color:#aaa;border-radius:30px;padding:9px 16px;font-size:11px;letter-spacing:.08em;cursor:pointer;transition:.25s}
+.filter:hover,.filter.active{background:#eee;color:#111;border-color:#eee}
+.gallery{columns:3 260px;column-gap:16px}
+.card{break-inside:avoid;margin:0 0 16px;cursor:pointer;opacity:0;transform:translateY(12px);animation:reveal .6s ease forwards}
+.card img{width:100%;height:auto;display:block;transition:transform .5s ease,opacity .5s ease}
+.card:hover img{transform:scale(1.012);opacity:.88}
+.caption{padding:11px 1px 2px;font-size:12px}.caption span{display:block;color:#707070;font-size:10px;margin-top:5px}
+.more-wrap{text-align:center;padding:35px 0 0}.more{background:none;border:1px solid #333;color:#ddd;padding:12px 23px;border-radius:30px;font-size:10px;letter-spacing:.18em;cursor:pointer;transition:.25s}.more:hover{background:#eee;color:#111}
+.wallpapers{border-top:1px solid var(--line)}
+.wallpapers h2{font-size:clamp(38px,6vw,80px);font-weight:300;letter-spacing:-.05em;margin:15px 0}
+.wallpapers p{color:#888;max-width:600px;line-height:1.7}
+.wall-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:45px}
+.wall{position:relative;background:#111;overflow:hidden;cursor:pointer}.wall img{width:100%;display:block;aspect-ratio:9/16;object-fit:cover;transition:.5s}.wall:hover img{transform:scale(1.015)}
+.download{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,.2);padding:11px;border-radius:4px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;cursor:pointer}
+.contact{border-top:1px solid var(--line);text-align:center}.contact h2{font-size:clamp(55px,9vw,120px);font-weight:300;letter-spacing:-.06em;margin:18px 0}.contact p{color:#999;line-height:1.8}.contact a{color:#eee;text-decoration:none;border-bottom:1px solid #555;padding-bottom:3px}
+footer{border-top:1px solid var(--line);padding:28px clamp(24px,6vw,90px);display:flex;justify-content:space-between;color:#666;font-size:10px;letter-spacing:.08em}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:20;display:none;align-items:center;justify-content:center;padding:55px 70px}.lightbox.show{display:flex}.lightbox img{max-width:92vw;max-height:88svh;object-fit:contain}.lb-btn{position:absolute;border:0;background:none;color:#ddd;cursor:pointer;font-size:22px;padding:12px;opacity:.75;transition:.2s}.lb-btn:hover{opacity:1}.close{top:14px;right:18px;font-size:28px}.prev{left:18px;top:50%;transform:translateY(-50%)}.next{right:18px;top:50%;transform:translateY(-50%)}.lb-download{right:24px;bottom:20px;font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+.status{color:#666;font-size:12px}
+@keyframes reveal{to{opacity:1;transform:none}}
+@media(max-width:800px){.intro{grid-template-columns:1fr;gap:25px}.wall-grid{grid-template-columns:repeat(2,1fr)}.lightbox{padding:45px 35px}.prev{left:2px}.next{right:2px}}
+@media(max-width:520px){section{padding:75px 20px}.gallery{columns:2 140px;column-gap:9px}.card{margin-bottom:9px}.hero-content{padding:28px 20px}.scroll{right:18px}.wall-grid{gap:9px}footer{display:block;line-height:2}}
+</style>
+</head>
+<body>
+<header class="hero" id="inicio">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <div class="eyebrow">Wildlife Photography</div>
+    <h1>EAMSONE</h1>
+    <div class="hero-title">WILDLIFE PHOTOGRAPHY</div>
+    <div class="by">By Edgar Molina</div>
+  </div>
+  <div class="scroll">SCROLL</div>
+</header>
+
+<section class="intro">
+  <div class="label">01 — Observing</div>
+  <div>
+    <h2>Un instante. Una especie. Una historia.</h2>
+    <p>Fotografía de fauna silvestre desde Colombia y Latinoamérica. Una mirada cercana a la naturaleza, sus texturas y esos momentos que duran apenas unos segundos.</p>
+  </div>
+</section>
+
+<section id="galeria">
+  <div class="label">02 — Wildlife</div>
+  <div class="filters" id="filters"></div>
+  <div class="gallery" id="gallery"><p class="status">Cargando fotografías…</p></div>
+  <div class="more-wrap"><button class="more" id="moreBtn" style="display:none">VER MÁS</button></div>
+</section>
+
+<section class="wallpapers" id="wallpapers">
+  <div class="label">03 — Wallpapers</div>
+  <h2>Lleva la naturaleza contigo.</h2>
+  <p>Fondos de pantalla seleccionados para tu móvil. Estas imágenes son las únicas disponibles para descarga directa desde el portafolio.</p>
+  <div class="wall-grid" id="wallGrid"><p class="status">Cargando wallpapers…</p></div>
+</section>
+
+<section class="contact" id="contacto">
+  <div class="label">04 — Contact</div>
+  <h2 id="contactTitle">Hablemos.</h2>
+  <div id="contactData"><p class="status">Cargando información…</p></div>
+</section>
+
+<footer><div>EAMSONE · WILDLIFE PHOTOGRAPHY</div><div>By Edgar Molina · 2026</div></footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-btn close" aria-label="Cerrar">×</button>
+  <button class="lb-btn prev" aria-label="Anterior">←</button>
+  <img id="lbImg" alt="">
+  <button class="lb-btn next" aria-label="Siguiente">→</button>
+  <button class="lb-btn lb-download" id="lbDownload" style="display:none">↓ Descargar</button>
+</div>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbxJeMUulmI7OFaJ6iRXSLBFEntlkeTQDbyu-DRfz0_RtO5CbzwIKcj_D549_DjIXTxe/exec";
+let gallery=[], wallpapers=[], visible=9, currentIndex=0, currentList=[];
+
+async function init(){
+  try{
+    const r=await fetch(API_URL); const data=await r.json();
+    gallery=data.gallery||[]; wallpapers=data.wallpapers||[];
+    if(data.banner) document.getElementById("heroBg").style.backgroundImage=`url("${data.banner}")`;
+    renderFilters(); renderGallery("all"); renderWalls(); renderContact(data.contact||"");
+  }catch(e){
+    document.getElementById("gallery").innerHTML='<p class="status">No se pudieron cargar las fotografías.</p>';
+    document.getElementById("wallGrid").innerHTML='';
+  }
+}
+function renderFilters(){
+  const cats=[...new Set(gallery.map(x=>x.categoria).filter(Boolean))];
+  const f=document.getElementById("filters");
+  f.innerHTML='<button class="filter active" data-cat="all">TODAS</button>'+cats.map(c=>`<button class="filter" data-cat="${esc(c)}">${esc(c).toUpperCase()}</button>`).join("");
+  f.querySelectorAll(".filter").forEach(b=>b.onclick=()=>{f.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");visible=9;renderGallery(b.dataset.cat)});
+}
+function renderGallery(cat){
+  const list=cat==="all"?gallery:gallery.filter(x=>x.categoria===cat); currentList=list;
+  const show=list.slice(0,visible), g=document.getElementById("gallery"); g.innerHTML="";
+  show.forEach((x,i)=>{const c=document.createElement("article");c.className="card";c.style.animationDelay=(i*.035)+"s";c.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy"><div class="caption">${esc(x.especie)}<span>${esc([x.cientifico,x.lugar].filter(Boolean).join(" · "))}</span></div>`;c.onclick=()=>openLightbox(i,list,false);g.appendChild(c)});
+  document.getElementById("moreBtn").style.display=list.length>visible?"inline-block":"none";
+}
+document.getElementById("moreBtn").onclick=()=>{visible+=9;const active=document.querySelector(".filter.active");renderGallery(active?active.dataset.cat:"all")};
+function renderWalls(){
+  const g=document.getElementById("wallGrid");g.innerHTML="";
+  wallpapers.forEach((x,i)=>{const d=document.createElement("div");d.className="wall";d.innerHTML=`<img src="${x.imagen}" alt="${esc(x.especie)}" loading="lazy"><button class="download">↓ Descargar</button>`;d.querySelector(".download").onclick=e=>{e.stopPropagation();downloadFile(x.imagen,x.nombre||"eamsone-wallpaper.jpg")};d.onclick=()=>openLightbox(i,wallpapers,true);g.appendChild(d)});
+}
+function renderContact(txt){
+  const box=document.getElementById("contactData");
+  if(!txt){box.innerHTML='<p class="status">Añade un archivo <b>contacto.txt</b> a la carpeta principal de Drive.</p>';return}
+  const lines=txt.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  box.innerHTML=lines.map(line=>{
+    const safe=esc(line);
+    if(/^https?:\/\//i.test(line)) return `<p><a href="${safe}" target="_blank" rel="noopener">${safe}</a></p>`;
+    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(line)) return `<p><a href="mailto:${safe}">${safe}</a></p>`;
+    return `<p>${safe}</p>`;
+  }).join("");
+}
+function openLightbox(i,list,isWall){currentIndex=i;currentList=list;document.getElementById("lbImg").src=list[i].imagen;document.getElementById("lbImg").alt=list[i].especie||"";document.getElementById("lightbox").classList.add("show");document.getElementById("lbDownload").style.display=isWall?"block":"none";document.getElementById("lbDownload").onclick=()=>downloadFile(list[currentIndex].imagen,list[currentIndex].nombre||"eamsone-wallpaper.jpg")}
+function closeLb(){document.getElementById("lightbox").classList.remove("show")}
+document.querySelector(".close").onclick=closeLb;
+document.querySelector(".prev").onclick=()=>step(-1);document.querySelector(".next").onclick=()=>step(1);
+function step(n){if(!currentList.length)return;currentIndex=(currentIndex+n+currentList.length)%currentList.length;document.getElementById("lbImg").src=currentList[currentIndex].imagen}
+document.getElementById("lightbox").onclick=e=>{if(e.target.id==="lightbox")closeLb()};
+document.addEventListener("keydown",e=>{if(!document.getElementById("lightbox").classList.contains("show"))return;if(e.key==="Escape")closeLb();if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1)});
+let sy=0;document.getElementById("lightbox").addEventListener("touchstart",e=>sy=e.changedTouches[0].screenY);document.getElementById("lightbox").addEventListener("touchend",e=>{const dy=e.changedTouches[0].screenY-sy;if(Math.abs(dy)<30)return;});
+function downloadFile(url,name){const a=document.createElement("a");a.href=url;a.download=name;a.target="_blank";document.body.appendChild(a);a.click();a.remove()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+window.addEventListener("scroll",()=>{const bg=document.getElementById("heroBg");const y=Math.min(window.scrollY*.18,100);bg.style.transform=`translate3d(0,${y}px,0) scale(1.06)`},{passive:true});
+init();
+</script>
+</body>
+</html>
